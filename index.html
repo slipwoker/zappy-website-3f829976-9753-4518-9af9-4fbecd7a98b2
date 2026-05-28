@@ -1,0 +1,1411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="index, follow">
+    <title>Thungy Brush — Thungy Brush llc</title>
+    <meta name="description" content="Welcome to Thungy Brush llc, where innovation meets simplicity. Explore our flagship product and find out why customers love the Thungy Brush. Shop now!">
+    <meta name="keywords" content="Thungy Brush, Thungy Brush llc, official Thungy Brush website, buy Thungy Brush online">
+    
+    <!-- Favicons -->
+    <link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon-48x48.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="/assets/favicon-512x512.png">
+    <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+    <!-- Zappy Analytics -->
+<script>
+(function() {
+  'use strict';
+  
+  // Configuration
+  var config = {
+    websiteId: '3f829976-9753-4518-9af9-4fbecd7a98b2',
+    apiUrl: 'https://api.zappy5.com/api/analytics/track',
+    sessionDuration: 30 * 60 * 1000, // 30 minutes
+    visitorDuration: 30 * 24 * 60 * 60 * 1000, // 30 days
+    trackPageViews: true,
+    trackClicks: true,
+    trackFormSubmissions: true
+  };
+  
+  // Generate or retrieve persistent visitor ID (30 days)
+  function getVisitorId() {
+    var visitorKey = 'zappy_visitor_' + config.websiteId;
+    var visitor = null;
+    
+    try {
+      visitor = localStorage.getItem(visitorKey);
+      if (visitor) {
+        var visitorData = JSON.parse(visitor);
+        var now = Date.now();
+        
+        // Check if visitor ID is still valid (30 days)
+        if (now - visitorData.created < config.visitorDuration) {
+          // Update last seen timestamp
+          visitorData.lastSeen = now;
+          localStorage.setItem(visitorKey, JSON.stringify(visitorData));
+          return visitorData.id;
+        }
+      }
+    } catch (e) {
+      console.warn('Zappy Analytics: LocalStorage not available');
+    }
+    
+    // Generate new visitor ID
+    var newVisitorId = 'zv_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    
+    try {
+      localStorage.setItem(visitorKey, JSON.stringify({
+        id: newVisitorId,
+        created: Date.now(),
+        lastSeen: Date.now()
+      }));
+    } catch (e) {
+      // Continue without local storage
+    }
+    
+    return newVisitorId;
+  }
+  
+  // Generate or retrieve session ID (30 minutes)
+  function getSessionId() {
+    var sessionKey = 'zappy_session_' + config.websiteId;
+    var session = null;
+    
+    try {
+      session = sessionStorage.getItem(sessionKey);
+      if (session) {
+        var sessionData = JSON.parse(session);
+        var now = Date.now();
+        
+        // Check if session is still valid
+        if (now - sessionData.timestamp < config.sessionDuration) {
+          // Update timestamp
+          sessionData.timestamp = now;
+          sessionStorage.setItem(sessionKey, JSON.stringify(sessionData));
+          return sessionData.id;
+        }
+      }
+    } catch (e) {
+      console.warn('Zappy Analytics: SessionStorage not available');
+    }
+    
+    // Generate new session ID
+    var newSessionId = 'zs_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    
+    try {
+      sessionStorage.setItem(sessionKey, JSON.stringify({
+        id: newSessionId,
+        timestamp: Date.now()
+      }));
+    } catch (e) {
+      // Continue without session storage
+    }
+    
+    return newSessionId;
+  }
+  
+  var visitorId = getVisitorId();
+  var sessionId = getSessionId();
+  
+  // Track an event
+  function trackEvent(eventType, data) {
+    data = data || {};
+    
+    var eventData = {
+      website_id: config.websiteId,
+      event_type: eventType,
+      page_path: window.location.pathname,
+      referrer: document.referrer || 'direct',
+      visitor_id: visitorId,
+      session_id: sessionId,
+      metadata: data
+    };
+    
+    // Use sendBeacon if available (better for page unload events)
+    if (navigator.sendBeacon) {
+      var blob = new Blob([JSON.stringify(eventData)], { type: 'application/json' });
+      navigator.sendBeacon(config.apiUrl, blob);
+    } else {
+      // Fallback to fetch
+      fetch(config.apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(eventData),
+        keepalive: true
+      }).catch(function(error) {
+        console.warn('Zappy Analytics: Failed to track event', error);
+      });
+    }
+  }
+  
+  // Track page view
+  if (config.trackPageViews) {
+    trackEvent('pageview', {
+      title: document.title,
+      url: window.location.href
+    });
+  }
+  
+  // Track clicks on important elements
+  if (config.trackClicks) {
+    document.addEventListener('click', function(e) {
+      var target = e.target;
+      
+      // Track button clicks (counted as actions)
+      if (target.tagName === 'BUTTON' || target.closest('button')) {
+        var button = target.tagName === 'BUTTON' ? target : target.closest('button');
+        trackEvent('click', {
+          element: 'button',
+          text: button.textContent.trim().substring(0, 100),
+          id: button.id || null,
+          class: button.className || null
+        });
+      }
+      
+      // Track link clicks (navigation - not counted as actions)
+      else if (target.tagName === 'A' || target.closest('a')) {
+        var link = target.tagName === 'A' ? target : target.closest('a');
+        trackEvent('navigation', {
+          element: 'link',
+          text: link.textContent.trim().substring(0, 100),
+          href: link.href,
+          external: link.hostname !== window.location.hostname
+        });
+      }
+    }, true);
+  }
+  
+  // Track form submissions
+  if (config.trackFormSubmissions) {
+    document.addEventListener('submit', function(e) {
+      var form = e.target;
+      
+      trackEvent('form_submit', {
+        form_id: form.id || null,
+        form_name: form.name || null,
+        form_action: form.action || null,
+        form_method: form.method || 'GET'
+      });
+    }, true);
+  }
+  
+  // Track time on page (send on page unload)
+  var pageLoadTime = Date.now();
+  
+  window.addEventListener('beforeunload', function() {
+    var timeOnPage = Math.floor((Date.now() - pageLoadTime) / 1000); // in seconds
+    
+    trackEvent('page_unload', {
+      time_on_page: timeOnPage,
+      page_path: window.location.pathname
+    });
+  });
+  
+  // Expose tracking function globally for custom events
+  window.zappyAnalytics = {
+    track: trackEvent,
+    getVisitorId: function() { return visitorId; },
+    getSessionId: function() { return sessionId; }
+  };
+  
+})();
+</script>
+<!-- End Zappy Analytics -->
+    <meta property="og:title" content="Thungy Brush — Thungy Brush llc">
+    <meta property="og:description" content="Welcome to Thungy Brush llc, where innovation meets simplicity. Explore our flagship product and find out why customers love the Thungy Brush. Shop now!">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Thungy Brush — Thungy Brush llc">
+    <meta name="twitter:description" content="Welcome to Thungy Brush llc, where innovation meets simplicity. Explore our flagship product and find out why customers love the Thungy Brush. Shop now!">
+    <meta property="og:type" content="website">
+  <meta property="og:locale" content="en_US">
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .skip-link { position: absolute; top: 0; left: 0; transform: translateY(-200%); padding: 12px 18px; background: var(--bg-dark, #1a1a1a); color: var(--text-light, #fff); font-weight: 600; border-radius: 0 0 8px 0; z-index: 10000; }
+    .skip-link:focus { transform: none; outline: 2px solid var(--ring, #fff); outline-offset: 2px; }
+    :focus-visible { outline: 2px solid var(--ring, currentColor); outline-offset: 3px; }
+  </style>
+
+
+  
+    <!-- Favicons -->
+    <link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon-48x48.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="/assets/favicon-512x512.png">
+    <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+    <!-- Cookie Consent -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vanilla-cookieconsent@3/dist/cookieconsent.css">
+    <script src="https://cdn.jsdelivr.net/npm/vanilla-cookieconsent@3/dist/cookieconsent.umd.js"></script>
+    <!-- Mickidum Accessibility Toolbar -->
+    <script src="https://cdn.jsdelivr.net/gh/mickidum/acc_toolbar/acctoolbar/acctoolbar.min.js"></script>
+    <link rel="stylesheet" href="/styles.css">
+
+    <style id="zappy-dropdown-submenu-styles">
+      /* ========== DESKTOP DROPDOWN SUBMENU STYLES ========== */
+      /* Base styles for dropdown submenus - parent must be positioned */
+      .nav-menu li:has(.sub-menu), nav li:has(.sub-menu), .navbar li:has(.sub-menu), #navMenu li:has(.sub-menu) { position: relative; }
+      /* Submenu base - hidden by default */
+      .nav-menu .sub-menu, nav .sub-menu, .navbar .sub-menu, #navMenu .sub-menu { display: block !important; position: absolute !important; top: 100%; left: 0; min-width: 220px; background: white; border-radius: 8px; box-shadow: 0 8px 25px rgba(0,0,0,0.15); padding: 8px 0; opacity: 0; visibility: hidden; transform: translateY(10px); transition: all 0.3s ease; z-index: 1000; list-style: none; pointer-events: none; }
+      /* CRITICAL: Desktop hover styles to show dropdown */
+      .nav-menu li:hover > .sub-menu, nav li:hover > .sub-menu, .navbar li:hover > .sub-menu, #navMenu li:hover > .sub-menu { opacity: 1 !important; visibility: visible !important; transform: translateY(0) !important; pointer-events: auto !important; }
+      /* Submenu item styling */
+      .sub-menu li { list-style: none; margin: 0; padding: 0; }
+      .sub-menu a { display: block !important; padding: 10px 16px !important; color: var(--text-dark, #333) !important; font-weight: 500; text-decoration: none; white-space: nowrap; transition: background-color 0.2s; }
+      .sub-menu .zappy-nav-child > a { padding-left: 28px !important; font-size: 0.9em !important; opacity: 0.85 !important; }
+      [dir="rtl"] .sub-menu .zappy-nav-child > a, html[lang="he"] .sub-menu .zappy-nav-child > a, html[lang="ar"] .sub-menu .zappy-nav-child > a { padding-left: 10px !important; padding-right: 28px !important; }
+      .sub-menu .zappy-nav-parent > a { font-weight: 600 !important; }
+      .sub-menu a:hover { background-color: #f5f5f5; }
+      /* RTL (Hebrew/Arabic) dropdown positioning */
+      [dir="rtl"] .nav-menu .sub-menu, [dir="rtl"] nav .sub-menu, [dir="rtl"] .navbar .sub-menu, html[lang="he"] .nav-menu .sub-menu, html[lang="he"] nav .sub-menu, html[lang="he"] .navbar .sub-menu, html[lang="ar"] .nav-menu .sub-menu, html[lang="ar"] nav .sub-menu, html[lang="ar"] .navbar .sub-menu { left: auto !important; right: 0 !important; }
+      /* Hide empty dropdown menus (exclude catalog sub-menus that use <a> children instead of <li>) */
+      .sub-menu:empty, .sub-menu:not(:has(li:not(.zappy-hidden-menu-item))):not(:has(> a)), .sub-menu:not(:has(li)):not(:has(> a)) { display: none !important; opacity: 0 !important; visibility: hidden !important; pointer-events: none !important; }
+      /* Desktop: show submenu on Menu Group hover */
+      li:has(.menu-group-title):hover > .sub-menu { opacity: 1 !important; visibility: visible !important; transform: translateY(0) !important; pointer-events: auto !important; }
+      /* Menu Group title styling */
+      .nav-menu > li > .menu-group-title, #navMenu > li > .menu-group-title { display: inline-block; padding: 0.5rem 1rem; cursor: default; user-select: none; }
+      
+      /* ========== MOBILE SUBMENU STYLES ========== */
+      @media (max-width: 768px) {
+        .nav-menu .sub-menu, nav .sub-menu, .navbar .sub-menu, #navMenu .sub-menu { position: static !important; transform: none !important; box-shadow: none !important; background: transparent !important; max-height: 0; overflow: hidden; opacity: 0; visibility: hidden; transition: max-height 0.3s ease, opacity 0.3s ease; padding: 0 !important; border-radius: 0 !important; }
+        .navbar .sub-menu.mobile-expanded, .nav-menu .sub-menu.mobile-expanded, #navMenu .sub-menu.mobile-expanded { max-height: none !important; overflow-y: visible !important; opacity: 1 !important; visibility: visible !important; padding: 8px 0 8px 16px !important; }
+        [dir="rtl"] .sub-menu.mobile-expanded, html[lang="he"] .sub-menu.mobile-expanded { padding: 8px 16px 8px 0 !important; }
+        /* Disable hover behavior on mobile */
+        .nav-menu li:hover > .sub-menu, nav li:hover > .sub-menu, .navbar li:hover > .sub-menu, #navMenu li:hover > .sub-menu { opacity: 0; visibility: hidden; pointer-events: none; }
+        .nav-menu li > .sub-menu.mobile-expanded, nav li > .sub-menu.mobile-expanded, .navbar li > .sub-menu.mobile-expanded, #navMenu li > .sub-menu.mobile-expanded { opacity: 1 !important; visibility: visible !important; pointer-events: auto !important; }
+        .nav-menu li:has(.sub-menu), nav li:has(.sub-menu), .navbar li:has(.sub-menu), #navMenu li:has(.sub-menu) { display: flex !important; flex-wrap: wrap !important; align-items: center !important; position: relative !important; min-height: 44px !important; }
+        .nav-menu li:has(.sub-menu) > a, nav li:has(.sub-menu) > a, .navbar li:has(.sub-menu) > a, #navMenu li:has(.sub-menu) > a { flex: 1 !important; min-width: 0 !important; }
+        .nav-menu li:has(.sub-menu) > .menu-group-title, nav li:has(.sub-menu) > .menu-group-title, .navbar li:has(.sub-menu) > .menu-group-title, #navMenu li:has(.sub-menu) > .menu-group-title { flex: 1 !important; min-width: 0 !important; padding: 0 !important; line-height: inherit !important; }
+        .nav-menu li:has(.sub-menu) > .sub-menu, nav li:has(.sub-menu) > .sub-menu, .navbar li:has(.sub-menu) > .sub-menu, #navMenu li:has(.sub-menu) > .sub-menu { flex-basis: 100% !important; width: 100% !important; }
+        .nav-menu li:has(.sub-menu) > a [class*="chevron"], .nav-menu li:has(.sub-menu) > a [class*="arrow"], .nav-menu li:has(.sub-menu) > a .fa-chevron-down, .nav-menu li:has(.sub-menu) > a .fa-angle-down, nav li:has(.sub-menu) > a [class*="chevron"], nav li:has(.sub-menu) > a [class*="arrow"], #navMenu li:has(.sub-menu) > a [class*="chevron"], #navMenu li:has(.sub-menu) > a [class*="arrow"] { display: none !important; visibility: hidden !important; }
+        .mobile-submenu-toggle { display: flex !important; align-items: center !important; justify-content: center !important; width: 44px !important; height: auto !important; background: transparent !important; border: none !important; cursor: pointer !important; color: var(--text-light) !important; position: static !important; flex-shrink: 0 !important; align-self: stretch !important; z-index: 2 !important; padding: 0 !important; margin: 0 !important; }
+        .mobile-submenu-toggle::after { content: '' !important; width: 0 !important; height: 0 !important; border-left: 6px solid transparent !important; border-right: 6px solid transparent !important; border-top: 7px solid currentColor !important; transition: transform 0.3s ease !important; }
+        .mobile-submenu-toggle.expanded::after { transform: rotate(180deg) !important; }
+        .sub-menu a { padding: 10px 0 !important; display: block !important; color: var(--text-light) !important; white-space: normal !important; }
+        .sub-menu .zappy-nav-child > a { padding-left: 28px !important; font-size: 0.9em !important; opacity: 0.85 !important; }
+        [dir="rtl"] .sub-menu .zappy-nav-child > a, html[lang="he"] .sub-menu .zappy-nav-child > a, html[lang="ar"] .sub-menu .zappy-nav-child > a { padding-left: 0 !important; padding-right: 28px !important; }
+        .sub-menu .zappy-nav-parent > a { font-weight: 600 !important; }
+        .nav-menu.active, #navMenu.active { max-width: 100vw !important; overflow-x: hidden !important; box-sizing: border-box !important; }
+        .navbar .sub-menu li a, nav.navbar .sub-menu li a, .zappy-products-dropdown .sub-menu a { color: var(--text-light) !important; }
+      }
+      @media (min-width: 769px) { .mobile-submenu-toggle { display: none !important; } }
+    </style>
+
+    <style id="zappy-widget-visibility">
+      html[dir="rtl"] .whatsapp-float { right: 20px !important; left: auto !important; }
+      html[dir="ltr"] .whatsapp-float, html:not([dir]) .whatsapp-float { left: 20px !important; right: auto !important; }
+      html[dir="rtl"] #mic-access-tool-general-button, html[dir="rtl"] .mic-access-tool-general-button,
+      html[dir="rtl"] #mic-init-access-tool .mic-access-tool-general-button,
+      html[dir="rtl"] #mic-init-access-tool #mic-access-tool-general-button,
+      html[dir="rtl"] ._access-icon { left: 20px !important; right: auto !important; }
+      html[dir="ltr"] #mic-access-tool-general-button, html[dir="ltr"] .mic-access-tool-general-button,
+      html[dir="ltr"] #mic-init-access-tool .mic-access-tool-general-button,
+      html[dir="ltr"] #mic-init-access-tool #mic-access-tool-general-button,
+      html[dir="ltr"] ._access-icon,
+      html:not([dir]) #mic-access-tool-general-button, html:not([dir]) .mic-access-tool-general-button,
+      html:not([dir]) #mic-init-access-tool .mic-access-tool-general-button,
+      html:not([dir]) #mic-init-access-tool #mic-access-tool-general-button,
+      html:not([dir]) ._access-icon { right: 20px !important; left: auto !important; }
+      @media (max-width: 768px) { .whatsapp-float { display: flex !important; } }
+      @media (min-width: 769px) { .whatsapp-float { display: flex !important; } }
+      @media (max-width: 768px) {
+        #mic-access-tool-general-button, .mic-access-tool-general-button,
+        #mic-init-access-tool .mic-access-tool-general-button, #mic-init-access-tool #mic-access-tool-general-button,
+        ._access-icon { display: flex !important; visibility: visible !important; opacity: 1 !important; pointer-events: auto !important; }
+        #mic-access-tool-box.opened-mic-access-tool, .mic-access-tool-box.opened-mic-access-tool,
+        #mic-init-access-tool #mic-access-tool-box.opened-mic-access-tool {
+          visibility: visible !important; opacity: 1 !important; pointer-events: auto !important;
+        }
+      }
+      @media (min-width: 769px) {
+        #mic-access-tool-general-button, .mic-access-tool-general-button,
+        #mic-init-access-tool .mic-access-tool-general-button, #mic-init-access-tool #mic-access-tool-general-button,
+        ._access-icon { display: flex !important; visibility: visible !important; opacity: 1 !important; pointer-events: auto !important; }
+        #mic-access-tool-box.opened-mic-access-tool, .mic-access-tool-box.opened-mic-access-tool,
+        #mic-init-access-tool #mic-access-tool-box.opened-mic-access-tool {
+          visibility: visible !important; opacity: 1 !important; pointer-events: auto !important;
+        }
+      }
+    </style>
+</head>
+<body>
+
+
+    <div class="mobile-search-panel" id="mobile-search-panel">
+      <div class="search-wrapper">
+        <input type="text" id="mobile-search-input" placeholder="Search products..." autocomplete="off">
+        <button class="search-submit" id="mobile-search-submit" title="Search">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><path d="M21 21l-4.35-4.35"></path></svg>
+        </button>
+        <button class="close-search" id="close-mobile-search">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"></path></svg>
+        </button>
+      </div>
+      <div class="search-results" id="mobile-search-results"></div>
+    </div>
+  
+<script>window.ZAPPY_WEBSITE_ID = "3f829976-9753-4518-9af9-4fbecd7a98b2";window.ZAPPY_API_BASE = "https://api.zappy5.com";</script><a class="skip-link" href="#main">Skip to main content</a>
+  <nav class="navbar">
+  <button class="mobile-toggle" id="mobileToggle" aria-label="Menu">
+    <svg class="hamburger-icon" width="24" height="24" viewBox="0 0 24 24" fill="none">
+      <path d="M3 12h18M3 6h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+    </svg>
+    <svg class="close-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" style="display: none;">
+      <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+    </svg>
+  </button>
+
+  <button class="phone-header-btn" data-phone="[business_phone]" aria-label="Call">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+    </svg>
+  </button>
+
+  <div class="nav-container">
+    <div class="nav-brand">
+      <a href="/" class="logo-link"><img class="logo" src="/assets/site-home-image-1.webp" alt="Thungy Brush llc"></a>
+    </div>
+
+    <ul class="nav-menu" id="navMenu">
+
+    <li class="menu-item-has-children zappy-products-dropdown">
+      <a href="/en/products">
+        Products
+        <svg class="dropdown-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M6 9l6 6 6-6"></path>
+        </svg>
+      </a>
+      <ul class="sub-menu" id="zappy-nav-category-links">
+        <li><a href="/en/products">All Courses</a></li>
+        <!-- Categories will be loaded dynamically -->
+      </ul>
+    </li>
+  <li><a href="/">Home</a></li><li><a href="/buy">Buy</a></li><li><a href="/about">About</a></li><li><a href="/contact">Contact</a></li></ul><div class="nav-ecommerce-icons nav-icons-left"><a href="/login" class="login-link nav-login" title="Login"><svg class="login-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg></a><a href="#cart" class="cart-link nav-cart" id="cart-drawer-toggle" title="Cart"><svg class="cart-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg><span class="cart-count">0</span></a><div class="nav-search-box">
+    <input type="text" class="nav-search-input" id="nav-search-input" placeholder="Search products..." autocomplete="off">
+    <button class="nav-search-btn" id="nav-search-btn" title="Search">
+      <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><path d="M21 21l-4.35-4.35"></path></svg>
+    </button>
+    <div class="nav-search-results" id="nav-search-results"></div>
+  </div></div><div class="nav-ecommerce-icons nav-icons-right"><button class="nav-search-toggle" id="mobile-search-toggle" title="Search"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><path d="M21 21l-4.35-4.35"></path></svg></button></div>
+
+    
+  </div>
+</nav>
+
+    <nav class="zappy-catalog-menu ltr" id="zappy-catalog-menu" dir="ltr" style="display:none">
+      <div class="catalog-menu-container">
+        <a href="/en/products" class="catalog-menu-item catalog-menu-all">All Courses</a>
+        <div class="catalog-menu-categories" id="zappy-category-links">
+          <!-- Categories will be loaded dynamically -->
+        </div>
+      </div>
+    </nav>
+  
+<script>
+
+// Navbar Mobile Menu Toggle and Contrast Fix
+(function() {
+  // Use 'load' event instead of 'DOMContentLoaded' to ensure we run AFTER all other scripts
+  window.addEventListener('load', function() {
+    
+    // FIX MOBILE BUTTON CONTRAST
+    // Detect navbar background color and apply contrasting color to mobile buttons
+    const navbar = document.querySelector('.navbar, nav, header');
+    if (!navbar) {
+      console.log('[Navbar] Navbar element not found');
+      return;
+    }
+    
+    // DECLARE VARIABLES EARLY to avoid Temporal Dead Zone errors
+    // These are used in multiple places below
+    let mobileToggle = document.getElementById('mobileToggle') ||
+                       document.querySelector('.mobile-toggle') ||
+                       document.querySelector('.hamburger') ||
+                       document.querySelector('.hamburger-menu') ||
+                       document.querySelector('.menu-toggle') ||
+                       document.querySelector('.burger-menu') ||
+                       document.querySelector('[aria-label="Menu"]') ||
+                       document.querySelector('[aria-label="תפריט"]');
+    
+    const phoneBtn = document.querySelector('.phone-header-btn');
+    
+    const computedStyle = window.getComputedStyle(navbar);
+    let bgColor = computedStyle.backgroundColor;
+    
+    console.log('[Navbar] Initial navbar background:', bgColor);
+    
+    // Check if background is transparent or rgba with 0 alpha
+    const isTransparent = bgColor === 'transparent' || 
+                         bgColor === 'rgba(0, 0, 0, 0)' ||
+                         (bgColor.startsWith('rgba') && bgColor.includes(', 0)'));
+    
+    if (isTransparent) {
+      // Check for background-image or gradient
+      const bgImage = computedStyle.backgroundImage;
+      if (bgImage && bgImage !== 'none') {
+        console.log('[Navbar] Navbar has background image/gradient, using dark text');
+        bgColor = 'rgb(240, 240, 240)'; // Assume light background
+      } else {
+        // Transparent navbar - check body background
+        const bodyBg = window.getComputedStyle(document.body).backgroundColor;
+        console.log('[Navbar] Navbar transparent, using body background:', bodyBg);
+        bgColor = bodyBg;
+      }
+    }
+    
+    // Calculate luminance to determine if background is light or dark
+    const rgb = bgColor.match(/\d+/g);
+    if (rgb && rgb.length >= 3) {
+      const r = parseInt(rgb[0]);
+      const g = parseInt(rgb[1]);
+      const b = parseInt(rgb[2]);
+      const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+      
+      // Mobile button colors are set by Claude's AI-generated CSS (same as .nav-menu a)
+      // No dynamic color overrides needed - colors come from the generated navbar CSS
+      console.log('[Navbar] Mobile button colors preserved from Claude CSS (luminance:', luminance.toFixed(2) + ')');
+      
+      // FIX ICON SIZES - Ensure SVGs are properly sized and visible
+      // INJECT CRITICAL CSS TO OVERRIDE ANY CONFLICTING RULES
+      const criticalCSS = document.createElement('style');
+      criticalCSS.id = 'zappy-mobile-nav-fix';
+      const htmlLang = document.documentElement.lang || 'en';
+      const htmlDir = document.documentElement.dir || 'ltr';
+      // Check both dir attribute AND lang for RTL detection
+      // dir="rtl" is the most reliable indicator
+      const isRTL = htmlDir === 'rtl' || htmlLang === 'he' || htmlLang === 'ar';
+      
+      criticalCSS.textContent = `
+        /* Hide mobile buttons on desktop, show only on mobile */
+        @media (min-width: 769px) {
+          .mobile-toggle,
+          .phone-header-btn {
+            display: none !important;
+          }
+        }
+        
+        /* Show and position mobile buttons correctly on mobile */
+        @media (max-width: 768px) {
+          .navbar,
+          nav.navbar {
+            min-height: 70px !important;
+          }
+
+          .mobile-toggle,
+          .phone-header-btn {
+            position: absolute !important;
+            top: 0 !important;
+            bottom: 0 !important;
+            margin-top: auto !important;
+            margin-bottom: auto !important;
+            transform: none !important;
+            z-index: 1001 !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            width: 36px !important;
+            height: 36px !important;
+            border-radius: 50% !important;
+            border: none !important;
+            cursor: pointer !important;
+            padding: 6px !important;
+            background: none !important;
+            color: var(--nav-text, var(--text-light)) !important;
+            touch-action: manipulation !important;
+            -webkit-tap-highlight-color: transparent !important;
+          }
+
+          html[data-zappy-site-type="ecommerce"] .phone-header-btn,
+          body[data-zappy-site-type="ecommerce"] .phone-header-btn,
+          html[data-zappy-site-type="ecommerce"] header .phone-header-btn,
+          html[data-zappy-site-type="ecommerce"] nav .phone-header-btn {
+            display: none !important;
+            visibility: hidden !important;
+            width: 0 !important;
+            height: 0 !important;
+            min-width: 0 !important;
+            overflow: hidden !important;
+          }
+          
+          /* LTR positioning (default): hamburger LEFT, phone RIGHT */
+          html:not([dir="rtl"]):not([lang="he"]):not([lang="ar"]) .mobile-toggle,
+          html[dir="ltr"] .mobile-toggle {
+            left: 12px !important;
+            right: auto !important;
+          }
+          html:not([dir="rtl"]):not([lang="he"]):not([lang="ar"]) .phone-header-btn,
+          html[dir="ltr"] .phone-header-btn {
+            right: 12px !important;
+            left: auto !important;
+          }
+          
+          /* RTL positioning: hamburger RIGHT, phone LEFT */
+          html[dir="rtl"] .mobile-toggle,
+          html[lang="he"] .mobile-toggle,
+          html[lang="ar"] .mobile-toggle {
+            right: 12px !important;
+            left: auto !important;
+          }
+          html[dir="rtl"] .phone-header-btn,
+          html[lang="he"] .phone-header-btn,
+          html[lang="ar"] .phone-header-btn {
+            left: 12px !important;
+            right: auto !important;
+          }
+          
+          /* CRITICAL: Ensure nav-container has min-height on mobile */
+          /* All children are positioned absolutely/fixed on mobile, so height:auto collapses to 0 */
+          .nav-container {
+            min-height: 70px !important;
+            position: relative !important;
+          }
+          
+          /* Ensure SVG icons are properly sized and inherit color */
+          .mobile-toggle svg,
+          .phone-header-btn svg {
+            width: 24px !important;
+            height: 24px !important;
+            /* Don't force display - let JavaScript control hamburger/close toggle */
+          }
+          
+          /* Reset nav-cta-container on mobile - remove desktop box-shadow/padding */
+          /* that creates a visible ghost box when CTA button is hidden */
+          .nav-cta-container {
+            box-shadow: none !important;
+            padding: 0 !important;
+          }
+          
+          /* Hide nav-cta-container entirely on mobile when there's no lang-switcher */
+          /* (only the CTA button is inside, and it's hidden on mobile) */
+          .nav-cta-container:not(:has(.lang-switcher)) {
+            display: none !important;
+          }
+          
+          /* CRITICAL: Prevent hero image fade gradient from bleeding over headline text */
+          /* The .image-fade-gradient has bottom: -30px (extends below parent) */
+          /* On mobile stacked layout, this overlaps the h1 text below the image */
+          .hero-image-column {
+            overflow: hidden !important;
+          }
+          .image-fade-gradient {
+            bottom: 0 !important;
+          }
+          
+          /* Hide desktop language switcher on mobile - hamburger menu handles it */
+          /* High specificity to override stored CSS */
+          .lang-switcher,
+          .nav-cta-container .lang-switcher,
+          .nav-container .lang-switcher,
+          .navbar .lang-switcher,
+          .navbar .nav-cta-container .lang-switcher {
+            display: none !important;
+          }
+        }
+      `;
+      
+      // Remove existing fix if present and inject new one
+      const existing = document.getElementById('zappy-mobile-nav-fix');
+      if (existing) existing.remove();
+      document.head.appendChild(criticalCSS);
+      
+      console.log('[Navbar] Critical CSS injected for mobile nav positioning');
+      
+      // ONLY apply inline positioning styles on mobile viewport
+      // On desktop, the CSS handles hiding these buttons with display: none
+      // Inline styles were breaking desktop layout by overriding CSS
+      const isMobileViewport = window.innerWidth <= 768;
+      
+      if (mobileToggle) {
+        // Icon sizing applies to all viewports for consistency
+        const hamburgerIcon = mobileToggle.querySelector('.hamburger-icon');
+        const closeIcon = mobileToggle.querySelector('.close-icon');
+        
+        if (hamburgerIcon) {
+          hamburgerIcon.style.setProperty('width', '24px', 'important');
+          hamburgerIcon.style.setProperty('height', '24px', 'important');
+          hamburgerIcon.style.setProperty('display', 'block', 'important'); // Show hamburger by default
+        }
+        if (closeIcon) {
+          closeIcon.style.setProperty('width', '24px', 'important');
+          closeIcon.style.setProperty('height', '24px', 'important');
+          closeIcon.style.setProperty('display', 'none', 'important'); // Hide close icon by default
+        }
+        
+        // ONLY set positioning inline styles on mobile
+        if (isMobileViewport) {
+          mobileToggle.style.setProperty('position', 'absolute', 'important');
+          mobileToggle.style.setProperty('top', '0', 'important');
+          mobileToggle.style.setProperty('bottom', '0', 'important');
+          mobileToggle.style.setProperty('margin-top', 'auto', 'important');
+          mobileToggle.style.setProperty('margin-bottom', 'auto', 'important');
+          mobileToggle.style.setProperty('transform', 'none', 'important');
+          mobileToggle.style.setProperty('z-index', '1001', 'important');
+          
+          // Clear any inline left/right so CSS can take over based on html[dir]
+          mobileToggle.style.removeProperty('left');
+          mobileToggle.style.removeProperty('right');
+          
+          console.log('[Navbar] Mobile toggle positioning applied (mobile viewport)');
+        } else {
+          // On desktop, clear any positioning styles to let CSS handle it
+          mobileToggle.style.removeProperty('position');
+          mobileToggle.style.removeProperty('top');
+          mobileToggle.style.removeProperty('transform');
+          mobileToggle.style.removeProperty('z-index');
+          mobileToggle.style.removeProperty('left');
+          mobileToggle.style.removeProperty('right');
+          console.log('[Navbar] Desktop viewport - cleared mobile toggle inline positioning');
+        }
+      }
+      
+      if (phoneBtn) {
+        // Icon sizing applies to all viewports
+        const phoneIcon = phoneBtn.querySelector('svg');
+        if (phoneIcon) {
+          phoneIcon.style.width = '24px';
+          phoneIcon.style.height = '24px';
+          phoneIcon.setAttribute('width', '24');
+          phoneIcon.setAttribute('height', '24');
+        }
+        
+        // ONLY set positioning inline styles on mobile
+        if (isMobileViewport) {
+          phoneBtn.style.setProperty('position', 'absolute', 'important');
+          phoneBtn.style.setProperty('top', '0', 'important');
+          phoneBtn.style.setProperty('bottom', '0', 'important');
+          phoneBtn.style.setProperty('margin-top', 'auto', 'important');
+          phoneBtn.style.setProperty('margin-bottom', 'auto', 'important');
+          phoneBtn.style.setProperty('transform', 'none', 'important');
+          phoneBtn.style.setProperty('z-index', '1001', 'important');
+          
+          // Clear any inline left/right so CSS can take over based on html[dir]
+          phoneBtn.style.removeProperty('left');
+          phoneBtn.style.removeProperty('right');
+          
+          console.log('[Navbar] Phone button positioning applied (mobile viewport)');
+        } else {
+          // On desktop, clear any positioning styles to let CSS handle it
+          phoneBtn.style.removeProperty('position');
+          phoneBtn.style.removeProperty('top');
+          phoneBtn.style.removeProperty('transform');
+          phoneBtn.style.removeProperty('z-index');
+          phoneBtn.style.removeProperty('left');
+          phoneBtn.style.removeProperty('right');
+          console.log('[Navbar] Desktop viewport - cleared phone button inline positioning');
+        }
+      }
+    } else {
+      console.log('[Navbar] Could not parse background color:', bgColor);
+    }
+    
+    // MOBILE MENU TOGGLE
+    // Re-query in case DOM changed (mobileToggle already declared at top of function)
+    mobileToggle = document.getElementById('mobileToggle') ||
+                   document.querySelector('.mobile-toggle') ||
+                   document.querySelector('.hamburger') ||
+                   document.querySelector('.hamburger-menu') ||
+                   document.querySelector('.menu-toggle') ||
+                   document.querySelector('.burger-menu') ||
+                   document.querySelector('[aria-label="Menu"]') ||
+                   document.querySelector('[aria-label="תפריט"]');
+    
+    // EXPANDED SEARCH: Find nav menu by ID or class
+    const navMenu = document.getElementById('navMenu') ||
+                  document.querySelector('.nav-menu') ||
+                  document.querySelector('.nav-links') ||
+                  document.querySelector('nav ul:not(.submenu)');
+    
+    if (!mobileToggle || !navMenu) {
+      console.log('[Navbar] Mobile toggle or menu not found:', { toggle: !!mobileToggle, menu: !!navMenu });
+      return;
+    }
+    
+    // Ensure navMenu has ID for CSS targeting
+    if (!navMenu.id) {
+      navMenu.id = 'navMenu';
+    }
+    
+    console.log('[Navbar] Initializing mobile menu...');
+    
+    // Remove any existing event listeners by cloning the button
+    const newToggle = mobileToggle.cloneNode(true);
+    mobileToggle.parentNode.replaceChild(newToggle, mobileToggle);
+    
+    // Toggle menu handler (shared by click and touchend)
+    function handleToggle(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      
+      const hamburgerIcon = newToggle.querySelector('.hamburger-icon');
+      const closeIcon = newToggle.querySelector('.close-icon');
+      const isActive = navMenu.classList.contains('active');
+      
+      if (isActive) {
+        // Close menu
+        navMenu.classList.remove('active');
+        if (hamburgerIcon) hamburgerIcon.style.setProperty('display', 'block', 'important');
+        if (closeIcon) closeIcon.style.setProperty('display', 'none', 'important');
+        document.body.style.overflow = '';
+        console.log('[Navbar] Menu closed');
+      } else {
+        // Open menu
+        navMenu.classList.add('active');
+        if (hamburgerIcon) hamburgerIcon.style.setProperty('display', 'none', 'important');
+        if (closeIcon) closeIcon.style.setProperty('display', 'block', 'important');
+        document.body.style.overflow = 'hidden';
+        console.log('[Navbar] Menu opened');
+      }
+    }
+    
+    // Use click for desktop/emulation and touchend as iOS Safari fallback.
+    // Prevent double-fire with a timestamp guard.
+    var lastToggleTime = 0;
+    function guardedToggle(e) {
+      var now = Date.now();
+      if (now - lastToggleTime < 300) return;
+      lastToggleTime = now;
+      handleToggle(e);
+    }
+    
+    newToggle.addEventListener('click', guardedToggle);
+    newToggle.addEventListener('touchend', guardedToggle);
+    
+    // Close menu when clicking nav links (but NOT dropdown toggles)
+    const navLinks = navMenu.querySelectorAll('a');
+    navLinks.forEach(function(link) {
+      link.addEventListener('click', function() {
+        // Don't close if it's a dropdown child (unless it's a real navigation link)
+        if (this.getAttribute('href') === '#') return;
+        
+        const hamburgerIcon = newToggle.querySelector('.hamburger-icon');
+        const closeIcon = newToggle.querySelector('.close-icon');
+        
+        navMenu.classList.remove('active');
+        if (hamburgerIcon) hamburgerIcon.style.setProperty('display', 'block', 'important');
+        if (closeIcon) closeIcon.style.setProperty('display', 'none', 'important');
+        document.body.style.overflow = '';
+        console.log('[Navbar] Menu closed (link clicked)');
+      });
+    });
+    
+    // DROPDOWN MENU TOGGLE (for mobile and touch devices)
+    var dropdownToggles = navMenu.querySelectorAll('.dropdown-toggle');
+    dropdownToggles.forEach(function(toggle) {
+      toggle.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var parent = this.closest('.nav-dropdown');
+        if (!parent) return;
+        
+        // Close other open dropdowns at the same level
+        var siblings = parent.parentNode.querySelectorAll('.nav-dropdown.open');
+        siblings.forEach(function(sib) {
+          if (sib !== parent) sib.classList.remove('open');
+        });
+        
+        parent.classList.toggle('open');
+        console.log('[Navbar] Dropdown toggled:', parent.classList.contains('open') ? 'open' : 'closed');
+      });
+    });
+    
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', function(e) {
+      if (!e.target.closest('.nav-dropdown')) {
+        var openDropdowns = document.querySelectorAll('.nav-dropdown.open');
+        openDropdowns.forEach(function(dd) { dd.classList.remove('open'); });
+      }
+    });
+    
+    console.log('[Navbar] Dropdown handlers initialized for ' + dropdownToggles.length + ' dropdowns');
+    
+    // Phone button functionality (phoneBtn already declared at top of function)
+    if (phoneBtn) {
+      phoneBtn.addEventListener('click', function() {
+        // Get phone number from placeholder in page or use default
+        const phoneLinks = document.querySelectorAll('a[href^="tel:"]');
+        const phoneNumber = phoneLinks.length > 0 
+          ? phoneLinks[0].getAttribute('href').replace('tel:', '')
+          : '[business_phone]';
+        
+        window.location.href = 'tel:' + phoneNumber;
+        console.log('[Navbar] Phone button clicked');
+      });
+    }
+    
+    console.log('[Navbar] Mobile menu initialized successfully');
+    
+    // WhatsApp button visibility is now controlled via CSS (siteSettings).
+    // No JS-based desktop hiding — the button is visible on both mobile and desktop by default.
+  });
+})();
+
+</script>
+  
+  <main id="main">
+    <section data-band-index="0" class="home-hero-section" data-layout-spec="Home-hero" data-hero-type="fullscreen-scrim">
+  <!-- Background Image Layer -->
+  <div class="home-hero-bg">
+    <img loading="eager" fetchpriority="high" data-hero-bg="true" data-placeholder="home-hero-image-1" data-context="A softly lit, curated lifestyle photograph of the Thungy Brush product resting on a natural linen surface beside a small ceramic bowl and a few dried botanicals, warm ambient light from the left, tactile paper-grain feel, muted earthy tones, premium editorial product photography for a general consumer goods brand" width="1200" height="700" src="/assets/site-home-hero-image-1.webp" alt="Thungy Brush product in a refined everyday setting">
+  </div>
+
+  <!-- Scrim Overlay -->
+  <div class="home-hero-scrim" aria-hidden="true"></div>
+
+  <!-- Paper Grain Texture Overlay -->
+  <div class="home-hero-grain" aria-hidden="true"></div>
+
+  <!-- Content Overlay Group -->
+  <div class="home-hero-content-wrapper">
+    <div class="home-hero-content">
+      <span class="home-hero-eyebrow">Simple. Elevated. Everyday.</span>
+      <h1 class="home-hero-headline">The Thungy Brush<br>You'll Reach for Every Day</h1>
+      <h3 class="home-hero-subtitle">Thoughtfully made for busy lives — eco-conscious materials,<br>effortless quality, delivered straight to your door.</h3>
+      <div class="home-hero-ctas">
+        <a href="#buy" class="home-hero-btn-primary">Buy Now</a>
+        <a href="#about" class="home-hero-btn-secondary">Learn More</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Divider: soft gradient fade + torn-paper SVG edge -->
+  <div class="home-hero-divider-wrapper">
+    <svg data-no-icon-edit="true" aria-hidden="true" viewBox="0 0 1440 90" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,90 L0,52 Q60,44 120,52 T240,46 Q310,52 380,44 T510,50 Q580,44 650,52 T780,46 Q850,52 920,44 T1060,50 Q1130,44 1200,52 T1330,46 Q1380,52 1440,48 L1440,90 Z" fill="#F2EDE6"></path>
+    </svg>
+  </div>
+</section>
+
+    <section class="featured-products-section" id="featured-products" data-zappy-dynamic="true">
+      <div class="container">
+        <h2 class="section-title">Featured Products</h2>
+        <div class="product-grid featured-grid" id="zappy-featured-products">
+          <div class="loading-products">Loading products...</div>
+        </div>
+        <div class="view-all-products">
+          <a href="/products" class="btn btn-primary">View All Courses →</a>
+        </div>
+      </div>
+    </section>
+  
+
+    <section class="featured-categories-section" id="featured-categories" data-zappy-dynamic="true">
+      <div class="container">
+        <h2 class="section-title">Shop by Category</h2>
+        <div class="category-blocks" id="zappy-featured-categories">
+          <div class="loading-categories">Loading products...</div>
+        </div>
+      </div>
+    </section>
+  
+
+<section data-band-index="1" class="home-features-section" data-layout-spec="Home-features">
+  <!-- Paper grain texture overlay -->
+  <div class="home-features-section__grain" aria-hidden="true"></div>
+
+  <div class="home-features-section__container">
+    <!-- LEFT: Content Column -->
+    <div class="home-features-section__content">
+      <p class="home-features-section__eyebrow">Why It Works</p>
+      <h2 class="home-features-section__heading">Built for the Way You Actually Live</h2>
+      <p class="home-features-section__intro">The Thungy Brush fits seamlessly into modern routines — no complicated rituals, no compromise. Just a thoughtfully made tool that earns its place in your home every single day.</p>
+
+      <div class="home-features-section__features">
+        <!-- Feature 1 -->
+        <article class="home-features-section__feature-block">
+          <div class="home-features-section__feature-icon" aria-hidden="true">
+            <svg data-element-type="icon" data-icon-type="svg" xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="14" cy="14" r="11"></circle>
+              <path d="M9 14l3.5 3.5L19 10"></path>
+            </svg>
+          </div>
+          <div class="home-features-section__feature-text">
+            <h3 class="home-features-section__feature-title">Ready When You Are</h3>
+            <p class="home-features-section__feature-desc">Designed for grab-and-go convenience, the Thungy Brush stores cleanly, dries quickly, and stays ready — so your routine never has to wait.</p>
+          </div>
+        </article>
+
+        <!-- Separator -->
+        <div class="home-features-section__separator" aria-hidden="true"></div>
+
+        <!-- Feature 2 -->
+        <article class="home-features-section__feature-block">
+          <div class="home-features-section__feature-icon" aria-hidden="true">
+            <svg data-element-type="icon" data-icon-type="svg" xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 3C14 3 7 9 7 15a7 7 0 0014 0c0-6-7-12-7-12z"></path>
+              <path d="M14 15v5"></path>
+            </svg>
+          </div>
+          <div class="home-features-section__feature-text">
+            <h3 class="home-features-section__feature-title">Materials That Matter</h3>
+            <p class="home-features-section__feature-desc">Crafted with eco-conscious material thinking at its core — natural fibers, responsibly sourced components, and a production process that respects both your home and the planet.</p>
+          </div>
+        </article>
+
+        <!-- Separator -->
+        <div class="home-features-section__separator" aria-hidden="true"></div>
+
+        <!-- Feature 3 -->
+        <article class="home-features-section__feature-block">
+          <div class="home-features-section__feature-icon" aria-hidden="true">
+            <svg data-element-type="icon" data-icon-type="svg" xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="4" y="8" width="20" height="14" rx="2"></rect>
+              <path d="M9 8V6a5 5 0 0110 0v2"></path>
+              <circle cx="14" cy="15" r="2"></circle>
+            </svg>
+          </div>
+          <div class="home-features-section__feature-text">
+            <h3 class="home-features-section__feature-title">Premium Everyday Usability</h3>
+            <p class="home-features-section__feature-desc">Every detail — from bristle density to handle balance — is refined for daily use. The kind of quality you notice the first time you use it, and every time after.</p>
+          </div>
+        </article>
+      </div>
+    </div>
+
+    <!-- RIGHT: Image Column -->
+    <div class="home-features-section__visual">
+      <!-- Dusty blue paper backplate -->
+      <div class="home-features-section__backplate" aria-hidden="true"></div>
+
+      <!-- Botanical stamp decoration -->
+      <svg class="home-features-section__stamp" data-no-icon-edit="true" aria-hidden="true" viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg" fill="none">
+        <circle cx="70" cy="70" r="62" stroke="#2B4A42" stroke-width="1.5" stroke-dasharray="4 3"></circle>
+        <circle cx="70" cy="70" r="54" stroke="#2B4A42" stroke-width="1"></circle>
+        <path d="M70 38 C70 38 56 52 56 63 C56 71.3 62.3 78 70 78 C77.7 78 84 71.3 84 63 C84 52 70 38 70 38Z" stroke="#2B4A42" stroke-width="1.4" fill="none"></path>
+        <path d="M70 78 L70 92" stroke="#2B4A42" stroke-width="1.4"></path>
+        <path d="M60 70 C55 65 48 66 46 70" stroke="#2B4A42" stroke-width="1.2" fill="none"></path>
+        <path d="M80 70 C85 65 92 66 94 70" stroke="#2B4A42" stroke-width="1.2" fill="none"></path>
+        <text x="70" y="112" text-anchor="middle" font-family="Inter, sans-serif" font-size="7" font-weight="500" letter-spacing="2" fill="#2B4A42" text-transform="uppercase">NATURAL MATERIALS</text>
+        <text x="70" y="123" text-anchor="middle" font-family="Inter, sans-serif" font-size="6.5" font-weight="400" letter-spacing="1.5" fill="#2B4A42">CONSCIOUS CHOICE</text>
+      </svg>
+
+      <!-- Main image -->
+      <figure class="home-features-section__image-frame">
+        <img loading="lazy" decoding="async" data-placeholder="home-features-image-1" data-context="A premium lifestyle photograph of a Thungy Brush — a beautifully crafted household cleaning brush with natural fiber bristles and a smooth wooden handle — resting on a clean linen cloth surface with soft natural window light, warm ivory and sage tones, editorial product photography style, minimal and elegant composition" width="600" height="750" src="/assets/site-home-features-image-1.webp" alt="Thungy Brush — premium natural fiber cleaning brush on linen surface">
+      </figure>
+    </div>
+  </div>
+
+  <!-- Bottom diagonal brush-stroke divider -->
+  <div class="home-features-section__divider-wrapper">
+    <svg data-no-icon-edit="true" aria-hidden="true" viewBox="0 0 1200 90" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,90 L0,45 C80,30 180,55 300,42 C420,29 520,50 640,38 C760,26 880,48 1000,36 C1080,28 1150,42 1200,35 L1200,90 Z" fill="#1C3530"></path>
+    </svg>
+  </div>
+</section>
+
+<section data-band-index="2" class="home-testimonials-section" data-layout-spec="Home-testimonials">
+  <!-- Paper grain texture overlay -->
+  <div class="home-testimonials-section__grain" aria-hidden="true"></div>
+
+  <div class="home-testimonials-section__container">
+
+    <!-- Editorial Header -->
+    <div class="home-testimonials-section__header">
+      <div class="home-testimonials-section__header-label">
+        <span class="home-testimonials-section__eyebrow">Real People. Real Results.</span>
+      </div>
+      <div class="home-testimonials-section__header-content">
+        <h2 class="home-testimonials-section__heading">Trusted by People
+          <em>Who Actually Use It</em>
+        </h2>
+        <p class="home-testimonials-section__intro">From quick weekday clean-ups to thoughtful eco-conscious routines — Thungy Brush fits seamlessly into the lives of people who care about what they bring into their home.</p>
+      </div>
+    </div>
+
+    <!-- Staggered Testimonial Grid -->
+    <div class="home-testimonials-section__grid">
+
+      <!-- Card 1 - Online Shopper -->
+      <article class="home-testimonials-section__card home-testimonials-section__card--tall">
+        <div class="home-testimonials-section__card-inner">
+          <div class="home-testimonials-section__quote-mark" aria-hidden="true">
+            <svg data-no-icon-edit="true" aria-hidden="true" width="48" height="36" viewBox="0 0 48 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M0 36V22.5C0 14.5 4.5 7.5 13.5 1.5L16.5 6C11.5 9.5 8.5 13.5 7.5 18H15V36H0ZM27 36V22.5C27 14.5 31.5 7.5 40.5 1.5L43.5 6C38.5 9.5 35.5 13.5 34.5 18H42V36H27Z" fill="currentColor" opacity="0.25"></path>
+            </svg>
+          </div>
+          <div class="home-testimonials-section__pull-quote">
+            <p class="home-testimonials-section__pull-text">"Ordered it on a whim — now I can't imagine cleaning without it."</p>
+          </div>
+          <p class="home-testimonials-section__quote-body">I found Thungy Brush while scrolling late at night and honestly didn't expect much. But when it arrived I was genuinely impressed — the quality is so much better than anything I've bought at the store. Super easy to use and the results are immediate.</p>
+          <footer class="home-testimonials-section__card-footer">
+            <div class="home-testimonials-section__avatar" aria-hidden="true">JM</div>
+            <div class="home-testimonials-section__author">
+              <strong class="home-testimonials-section__name">Jamie M.</strong>
+              <span class="home-testimonials-section__descriptor">Online shopper &amp; first-time buyer</span>
+            </div>
+          </footer>
+        </div>
+        <div class="home-testimonials-section__card-accent" aria-hidden="true"></div>
+      </article>
+
+      <!-- Card 2 - Eco-Conscious Buyer (featured / pull-quote style) -->
+      <article class="home-testimonials-section__card home-testimonials-section__card--featured">
+        <div class="home-testimonials-section__card-inner">
+          <div class="home-testimonials-section__eco-badge" aria-hidden="true">
+            <svg data-no-icon-edit="true" aria-hidden="true" width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="18" cy="18" r="17" stroke="currentColor" stroke-width="1.5" opacity="0.5"></circle>
+              <path d="M18 8C13 8 9 12 9 17C9 22 13 26 18 26C18 21 22 17 27 17C27 12 23 8 18 8Z" stroke="currentColor" stroke-width="1.5" fill="none" opacity="0.7"></path>
+              <path d="M18 26C18 21 14 17 9 17" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" opacity="0.5"></path>
+            </svg>
+          </div>
+          <div class="home-testimonials-section__quote-mark" aria-hidden="true">
+            <svg data-no-icon-edit="true" aria-hidden="true" width="48" height="36" viewBox="0 0 48 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M0 36V22.5C0 14.5 4.5 7.5 13.5 1.5L16.5 6C11.5 9.5 8.5 13.5 7.5 18H15V36H0ZM27 36V22.5C27 14.5 31.5 7.5 40.5 1.5L43.5 6C38.5 9.5 35.5 13.5 34.5 18H42V36H27Z" fill="currentColor" opacity="0.25"></path>
+            </svg>
+          </div>
+          <p class="home-testimonials-section__quote-body">I've been trying to reduce plastic in my home for years. Most "eco" products feel like a compromise — not Thungy Brush. It performs just as well as conventional alternatives, and I love knowing I'm making a better choice every single time I use it.</p>
+          <div class="home-testimonials-section__highlight-line">
+            <p class="home-testimonials-section__highlight-text">"Finally a product that doesn't make me choose between clean and conscious."</p>
+          </div>
+          <footer class="home-testimonials-section__card-footer">
+            <div class="home-testimonials-section__avatar home-testimonials-section__avatar--accent" aria-hidden="true">SR</div>
+            <div class="home-testimonials-section__author">
+              <strong class="home-testimonials-section__name">Sofia R.</strong>
+              <span class="home-testimonials-section__descriptor">Eco-conscious homeowner &amp; sustainability advocate</span>
+            </div>
+          </footer>
+        </div>
+        <div class="home-testimonials-section__card-accent" aria-hidden="true"></div>
+      </article>
+
+      <!-- Card 3 - Busy Professional -->
+      <article class="home-testimonials-section__card home-testimonials-section__card--short">
+        <div class="home-testimonials-section__card-inner">
+          <div class="home-testimonials-section__quote-mark" aria-hidden="true">
+            <svg data-no-icon-edit="true" aria-hidden="true" width="48" height="36" viewBox="0 0 48 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M0 36V22.5C0 14.5 4.5 7.5 13.5 1.5L16.5 6C11.5 9.5 8.5 13.5 7.5 18H15V36H0ZM27 36V22.5C27 14.5 31.5 7.5 40.5 1.5L43.5 6C38.5 9.5 35.5 13.5 34.5 18H42V36H27Z" fill="currentColor" opacity="0.25"></path>
+            </svg>
+          </div>
+          <p class="home-testimonials-section__quote-body">Between work and the kids, I don't have time to fuss with complicated cleaning routines. Thungy Brush is fast, effective, and easy to grab and go. Ordering again was a no-brainer — the checkout was as simple as the product itself.</p>
+          <div class="home-testimonials-section__pull-quote home-testimonials-section__pull-quote--sm">
+            <p class="home-testimonials-section__pull-text">"Fast, effective, zero fuss. It just works."</p>
+          </div>
+          <footer class="home-testimonials-section__card-footer">
+            <div class="home-testimonials-section__avatar" aria-hidden="true">DK</div>
+            <div class="home-testimonials-section__author">
+              <strong class="home-testimonials-section__name">Dana K.</strong>
+              <span class="home-testimonials-section__descriptor">Busy parent &amp; working professional</span>
+            </div>
+          </footer>
+        </div>
+        <div class="home-testimonials-section__card-accent" aria-hidden="true"></div>
+      </article>
+
+    </div>
+    <!-- End Grid -->
+
+  </div>
+
+  <!-- Bottom divider: curved gradient dissolve into gallery -->
+  <div class="home-testimonials-section__divider-wrapper">
+    <svg data-no-icon-edit="true" aria-hidden="true" viewBox="0 0 1200 90" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,90 L0,45 Q150,20 300,38 T600,30 Q750,20 900,38 T1200,28 L1200,90 Z" fill="#F2EDE6"></path>
+    </svg>
+  </div>
+
+</section>
+
+<section data-band-index="3" class="home-gallery-section" data-layout-spec="Home-gallery">
+  <!-- Paper grain texture overlay -->
+  <div class="home-gallery-section__grain" aria-hidden="true"></div>
+
+  <div class="home-gallery-section__container">
+
+    <!-- Intro Block -->
+    <div class="home-gallery-section__intro">
+      <span class="home-gallery-section__label">Crafted to Perform</span>
+      <h2 class="home-gallery-section__heading">The Thungy Brush,<br>Up Close &amp; In Use</h2>
+      <p class="home-gallery-section__subtext">Every detail of the Thungy Brush is designed with intention — premium materials, a clean tactile finish, and a shape that fits naturally in your hand. Built for daily use, built to last.</p>
+    </div>
+
+    <!-- Four-Tile Gallery Grid -->
+    <div class="home-gallery-section__grid">
+
+      <!-- Three supporting tiles on the left -->
+      <div class="home-gallery-section__col-start">
+        <figure class="home-gallery-section__tile home-gallery-section__tile--sm">
+          <img loading="lazy" decoding="async" data-placeholder="home-gallery-image-1" data-context="Extreme close-up macro shot of a premium brush head showing fine bristle texture, natural fiber detail, and clean craftsmanship on an ivory linen surface. Soft natural light, editorial product photography style for Thungy Brush llc." width="580" height="360" src="/assets/site-home-gallery-image-1.webp" alt="Close-up of Thungy Brush bristle texture and premium materials">
+          <figcaption class="home-gallery-section__caption">Premium texture, every bristle placed with purpose.</figcaption>
+        </figure>
+
+        <div class="home-gallery-section__col-start-row">
+          <figure class="home-gallery-section__tile home-gallery-section__tile--sm">
+            <img loading="lazy" decoding="async" data-placeholder="home-gallery-image-2" data-context="Lifestyle scene of a person using the Thungy Brush in a clean bright modern home environment — perhaps scrubbing a surface or applying product. Warm natural light, editorial feel, hands visible, product in action. Clean and premium aesthetic." width="280" height="280" src="/assets/site-home-gallery-image-2.webp" alt="Person using the Thungy Brush in a clean home setting">
+            <figcaption class="home-gallery-section__caption">Daily practicality, effortlessly.</figcaption>
+          </figure>
+
+          <figure class="home-gallery-section__tile home-gallery-section__tile--sm">
+            <img loading="lazy" decoding="async" data-placeholder="home-gallery-image-3" data-context="Flat-lay product packaging shot of Thungy Brush llc — clean minimal box or sleeve packaging, kraft paper or sage green tones, placed on an ivory linen or marble surface. Premium unboxing feel, editorial product photography." width="280" height="280" src="/assets/site-home-gallery-image-3.webp" alt="Thungy Brush clean minimal product packaging detail">
+            <figcaption class="home-gallery-section__caption">Clean packaging, clear intention.</figcaption>
+          </figure>
+        </div>
+      </div>
+
+      <!-- Oversized tile on the right -->
+      <figure class="home-gallery-section__tile home-gallery-section__tile--hero">
+        <img loading="lazy" decoding="async" data-placeholder="home-gallery-image-4" data-context="Wide editorial lifestyle photo of the Thungy Brush placed in a beautifully styled home interior — perhaps on a wooden shelf, bathroom counter, or kitchen surface surrounded by natural elements like plants, stone, or linen. Warm teal and ivory tones, magazine quality photography." width="600" height="720" src="/assets/site-home-gallery-image-4.webp" alt="Thungy Brush styled in a beautiful home lifestyle context">
+        <figcaption class="home-gallery-section__caption home-gallery-section__caption--hero">Made for the spaces you care about.</figcaption>
+      </figure>
+
+    </div>
+    <!-- /Grid -->
+
+    <!-- Closing CTA Block -->
+    <div class="home-gallery-section__cta-row">
+      <!-- Botanical decoration -->
+      <svg class="home-gallery-section__botanical" data-no-icon-edit="true" aria-hidden="true" viewBox="0 0 120 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M60 170 C60 170 58 140 40 120 C22 100 10 90 20 70 C30 50 55 55 60 40" stroke="#1F5D5E" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.18"></path>
+        <path d="M60 130 C60 130 40 125 30 110 C20 95 28 82 40 85" stroke="#1F5D5E" stroke-width="1.2" stroke-linecap="round" fill="none" opacity="0.14"></path>
+        <path d="M60 100 C60 100 75 95 80 80 C85 65 76 55 65 60" stroke="#1F5D5E" stroke-width="1.2" stroke-linecap="round" fill="none" opacity="0.14"></path>
+        <ellipse cx="40" cy="84" rx="10" ry="6" transform="rotate(-20 40 84)" fill="#1F5D5E" opacity="0.1"></ellipse>
+        <ellipse cx="65" cy="59" rx="9" ry="5" transform="rotate(15 65 59)" fill="#1F5D5E" opacity="0.1"></ellipse>
+        <ellipse cx="30" cy="109" rx="8" ry="5" transform="rotate(-30 30 109)" fill="#1F5D5E" opacity="0.1"></ellipse>
+      </svg>
+
+      <div class="home-gallery-section__cta-text">
+        <p class="home-gallery-section__quality-line">Quality you can feel. Simplicity you'll appreciate every day.</p>
+      </div>
+      <a href="#buy" class="home-gallery-section__cta-btn">
+        See Buying Options
+        <svg data-element-type="icon" data-icon-type="svg" aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+      </a>
+    </div>
+
+  </div>
+  <!-- /Container -->
+
+  <!-- Bottom scalloped divider transitioning to CTA section (bg-dark) -->
+  <div class="home-gallery-section__divider-wrapper">
+    <svg data-no-icon-edit="true" aria-hidden="true" viewBox="0 0 1200 90" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,90 L0,48
+        C30,38 60,58 90,48
+        C120,38 150,58 180,48
+        C210,38 240,58 270,48
+        C300,38 330,58 360,48
+        C390,38 420,58 450,48
+        C480,38 510,58 540,48
+        C570,38 600,58 630,48
+        C660,38 690,58 720,48
+        C750,38 780,58 810,48
+        C840,38 870,58 900,48
+        C930,38 960,58 990,48
+        C1020,38 1050,58 1080,48
+        C1110,38 1140,58 1170,48
+        L1200,48 L1200,90 Z" fill="#1C3530" opacity="0.22"></path>
+      <path d="M0,90 L0,58
+        C30,48 60,68 90,58
+        C120,48 150,68 180,58
+        C210,48 240,68 270,58
+        C300,48 330,68 360,58
+        C390,48 420,68 450,58
+        C480,48 510,68 540,58
+        C570,48 600,68 630,58
+        C660,48 690,68 720,58
+        C750,48 780,68 810,58
+        C840,48 870,68 900,58
+        C930,48 960,68 990,58
+        C1020,48 1050,68 1080,58
+        C1110,48 1140,68 1170,58
+        L1200,58 L1200,90 Z" fill="#1C3530"></path>
+    </svg>
+  </div>
+
+</section>
+
+<section data-band-index="4" class="home-cta-section" data-layout-spec="Home-cta">
+  <!-- Paper grain texture overlay -->
+  <div class="home-cta-texture" aria-hidden="true"></div>
+
+  <!-- Botanical branch left decoration -->
+  <svg class="home-cta-botanical-left" data-no-icon-edit="true" aria-hidden="true" viewBox="0 0 120 320" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M60,300 C60,300 55,260 62,230 C69,200 80,185 75,160 C70,135 50,125 55,100 C60,75 78,65 72,40 C68,20 58,10 58,10" stroke="#2B4A42" stroke-width="2" stroke-linecap="round" fill="none"></path>
+    <path d="M62,230 C62,230 40,220 28,205 C16,190 20,175 20,175" stroke="#2B4A42" stroke-width="1.5" stroke-linecap="round" fill="none"></path>
+    <path d="M28,205 C28,205 22,192 30,182 C38,172 48,178 48,178" stroke="#2B4A42" stroke-width="1" stroke-linecap="round" fill="none"></path>
+    <ellipse cx="24" cy="200" rx="10" ry="6" transform="rotate(-30 24 200)" stroke="#2B4A42" stroke-width="1" fill="none"></ellipse>
+    <path d="M75,160 C75,160 95,148 105,132 C115,116 108,102 108,102" stroke="#2B4A42" stroke-width="1.5" stroke-linecap="round" fill="none"></path>
+    <ellipse cx="106" cy="118" rx="9" ry="5" transform="rotate(25 106 118)" stroke="#2B4A42" stroke-width="1" fill="none"></ellipse>
+    <path d="M72,40 C72,40 88,30 96,18 C100,12 98,6 98,6" stroke="#2B4A42" stroke-width="1.5" stroke-linecap="round" fill="none"></path>
+    <ellipse cx="94" cy="22" rx="7" ry="4" transform="rotate(20 94 22)" stroke="#2B4A42" stroke-width="1" fill="none"></ellipse>
+    <path d="M55,100 C55,100 35,90 25,75 C15,60 20,48 20,48" stroke="#2B4A42" stroke-width="1.5" stroke-linecap="round" fill="none"></path>
+    <ellipse cx="22" cy="62" rx="8" ry="5" transform="rotate(-20 22 62)" stroke="#2B4A42" stroke-width="1" fill="none"></ellipse>
+  </svg>
+
+  <!-- Clean Home Clean Planet badge -->
+  <svg class="home-cta-badge" data-no-icon-edit="true" aria-hidden="true" viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="80" cy="80" r="72" stroke="#2B4A42" stroke-width="1.5" stroke-dasharray="4 3" fill="none"></circle>
+    <circle cx="80" cy="80" r="58" stroke="#2B4A42" stroke-width="1" fill="none"></circle>
+    <!-- House icon -->
+    <path d="M80,52 L60,68 L60,88 L100,88 L100,68 Z" stroke="#2B4A42" stroke-width="1.5" stroke-linejoin="round" fill="none"></path>
+    <rect x="72" y="76" width="16" height="12" stroke="#2B4A42" stroke-width="1.2" fill="none"></rect>
+    <path d="M74,52 L86,52" stroke="#2B4A42" stroke-width="1" stroke-linecap="round"></path>
+    <!-- Circular text path -->
+    <path id="cta-badge-circle" d="M80,20 A60,60 0 1,1 79.9,20" fill="none"></path>
+    <text font-size="9" fill="#2B4A42" font-family="Inter, sans-serif" letter-spacing="3">
+      <textPath href="#cta-badge-circle" startOffset="5%">CLEAN HOME · CLEAN PLANET · THUNGY BRUSH ·</textPath>
+    </text>
+  </svg>
+
+  <div class="home-cta-container">
+    <div class="home-cta-panel">
+      <!-- Accent underline bar -->
+      <div class="home-cta-accent-bar" aria-hidden="true"></div>
+
+      <h2 class="home-cta-heading">Ready to Buy? Don't Wait — Your Perfect Brush Is One Click Away</h2>
+
+      <p class="home-cta-subtext">Shopping with Thungy Brush is simple, fast, and backed by our commitment to quality. No complicated steps — just choose, click, and enjoy the difference a great brush makes.</p>
+
+      <div class="home-cta-buttons">
+        <a href="#buy" class="home-cta-btn-primary">
+          <svg data-element-type="icon" data-icon-type="svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+          Buy Now
+        </a>
+        <a href="#contact" class="home-cta-btn-secondary">Contact Us</a>
+      </div>
+
+      <!-- Trust micro-line -->
+      <p class="home-cta-trust">
+        <svg data-element-type="icon" data-icon-type="svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+        Secure checkout &nbsp;·&nbsp;
+        <svg data-element-type="icon" data-icon-type="svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        Quality guaranteed &nbsp;·&nbsp;
+        <svg data-element-type="icon" data-icon-type="svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
+        Fast shipping
+      </p>
+    </div>
+  </div>
+</section>
+  </main>
+  
+  <footer class="site-footer" aria-label="Site Footer"> <div class="footer-container"> <div class="footer-top"> <div class="footer-col footer-brand"> <img src="/assets/thungy-brush-llc-general-logo.webp" alt="Thungy Brush llc" class="logo"> <p class="footer-tagline">Premium tools crafted with intention. Thungy Brush llc brings tactile quality and editorial refinement to every product we make.</p> <div class="footer-social" aria-label="Social media links">    </div> </div> <div class="footer-col footer-links"> <h3 class="footer-heading">Quick Links</h3> <ul class="footer-nav" aria-label="Quick navigation links"> <li><a href="/">Home</a></li> <li><a href="/buy">Buy</a></li> <li><a href="/about">About</a></li> <li><a href="/contact">Contact</a></li> </ul> </div> <div class="footer-col footer-contact-col"> <h3 class="footer-heading">Contact</h3> <ul class="footer-contact" aria-label="Contact information"> <li> <span class="contact-icon"><i class="fas fa-envelope"></i></span> <span class="contact-text"><a href="mailto:[business_email]">[business_email]</a></span> </li> <li> <span class="contact-icon"><i class="fas fa-phone"></i></span> <span class="contact-text"><a href="tel:[business_phone]">[business_phone]</a></span> </li> <li><a href="/"><span class="contact-icon"><i class="fas fa-map-marker-alt"></i></span> <span class="contact-text">[business_address]</span></a></li> </ul> </div> </div> <div class="footer-bottom"> <p class="footer-copyright">© 2026 Thungy Brush llc. All rights reserved.</p> <div class="footer-legal" aria-label="Legal links"> <a href="/privacy">Privacy Policy</a> <a href="/terms">Terms &amp; Conditions</a><span class="separator">|</span>
+            <a href="/return-policy" aria-label="Return Policy">
+              Return Policy
+            </a> <a href="/accessibility">Accessibility</a> <a href="https://zappy5.com" target="_blank" class="zappy-attribution" rel="noopener noreferrer">Generated by Zappy</a> </div> </div> </div> </footer>
+  
+  <a href="https://wa.me/[whatsapp_handle]" class="whatsapp-float" aria-label="WhatsApp">
+    <i class="fab fa-whatsapp"></i>
+  </a>
+  
+  <div data-integration="accessibility:toolbar"></div>
+
+    <script src="/script.js"></script>
+
+    <script id="zappy-mobile-submenu-script">
+    (function() {
+      function initMobileSubmenuToggles() {
+        if (window.innerWidth > 768) {
+          document.querySelectorAll('.mobile-submenu-toggle').forEach(function(btn) { btn.remove(); });
+          document.querySelectorAll('.sub-menu.mobile-expanded').forEach(function(menu) { menu.classList.remove('mobile-expanded'); });
+          return;
+        }
+        var items = document.querySelectorAll('.nav-menu li:has(.sub-menu), nav li:has(.sub-menu), .navbar li:has(.sub-menu), #navMenu li:has(.sub-menu)');
+        items.forEach(function(li) {
+          if (li.querySelector('.mobile-submenu-toggle')) return;
+          var submenu = li.querySelector('.sub-menu');
+          var parentLink = li.querySelector(':scope > a');
+          if (!submenu || !parentLink) return;
+          var toggleBtn = document.createElement('button');
+          toggleBtn.className = 'mobile-submenu-toggle';
+          toggleBtn.setAttribute('aria-label', 'Toggle submenu');
+          toggleBtn.setAttribute('type', 'button');
+          parentLink.insertAdjacentElement('afterend', toggleBtn);
+          toggleBtn.addEventListener('click', function(e) {
+            e.preventDefault(); e.stopPropagation();
+            document.querySelectorAll('.sub-menu.mobile-expanded').forEach(function(menu) {
+              if (menu !== submenu) { menu.classList.remove('mobile-expanded'); var t = menu.parentElement.querySelector('.mobile-submenu-toggle'); if(t) t.classList.remove('expanded'); }
+            });
+            submenu.classList.toggle('mobile-expanded');
+            toggleBtn.classList.toggle('expanded');
+          });
+        });
+      }
+      if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', initMobileSubmenuToggles); }
+      else { initMobileSubmenuToggles(); }
+      var resizeTimer; window.addEventListener('resize', function() { clearTimeout(resizeTimer); resizeTimer = setTimeout(initMobileSubmenuToggles, 250); });
+      // Re-initialize when mobile menu becomes visible (MutationObserver)
+      var observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+          if (mutation.type === 'attributes') {
+            var target = mutation.target;
+            if (target.classList && (target.classList.contains('active') || target.classList.contains('open'))) {
+              setTimeout(initMobileSubmenuToggles, 100);
+            }
+          }
+        });
+      });
+      setTimeout(function() {
+        document.querySelectorAll('.mobile-menu, .nav-menu, #navMenu, nav').forEach(function(menu) {
+          observer.observe(menu, { attributes: true, attributeFilter: ['class', 'style'] });
+        });
+      }, 500);
+    })();
+    </script>
+
+    <script id="zappy-navbar-scroll-effect">
+    (function(){
+      var nb=document.querySelector('nav.navbar,.navbar:not(.zappy-catalog-menu)');
+      var cm=document.querySelector('.zappy-catalog-menu,#zappy-catalog-menu');
+      if(!nb)return;
+      var fb='rgba(255,253,248,0.85)';
+      var th=60;
+      var rs=getComputedStyle(document.documentElement);
+      var td=rs.getPropertyValue('--text-dark').trim()||'#1a1a1a';
+      var tl=rs.getPropertyValue('--text-light').trim()||'#ffffff';
+      var st=true?td:tl;
+      nb.style.transition='background 0.3s ease,backdrop-filter 0.3s ease,-webkit-backdrop-filter 0.3s ease,box-shadow 0.3s ease';
+      if(cm)cm.style.transition='background 0.3s ease,backdrop-filter 0.3s ease,-webkit-backdrop-filter 0.3s ease';
+      var neSel='a,.navbar-brand,.navbar-brand a,.dropdown-toggle,.mobile-toggle,.phone-header-btn,.mobile-hamburger-btn,.mobile-close-btn,.mobile-submenu-toggle,.nav-link';
+      var skipCls=['cart-link','login-link','nav-search-toggle','search-toggle'];
+      function sTC(c,clr){var els=c.querySelectorAll(neSel);for(var i=0;i<els.length;i++){var sk=false;if(els[i].closest('.sub-menu')||els[i].closest('.dropdown-menu')){sk=true;}for(var j=0;j<skipCls.length;j++){if(els[i].classList.contains(skipCls[j])){sk=true;break;}}if(!sk)els[i].style.setProperty('color',clr,'important');}}
+      function cTC(c){var els=c.querySelectorAll(neSel);for(var i=0;i<els.length;i++){if(els[i].closest('.sub-menu')||els[i].closest('.dropdown-menu'))continue;els[i].style.removeProperty('color');}}
+      function applyScrolled(){
+        nb.classList.add('scrolled');
+        if(window.innerWidth>768){
+          nb.style.setProperty('--frosted-text',st);
+          nb.style.setProperty('background-image','none','important');
+          nb.style.setProperty('background-color',fb,'important');
+          nb.style.backdropFilter='blur(12px)';nb.style.webkitBackdropFilter='blur(12px)';nb.style.boxShadow='0 2px 16px rgba(0,0,0,0.12)';
+          sTC(nb,st);
+        }
+        if(cm){cm.classList.add('scrolled');if(window.innerWidth>768){cm.style.setProperty('background',fb,'important');cm.style.setProperty('backdrop-filter','blur(12px)','important');cm.style.setProperty('-webkit-backdrop-filter','blur(12px)','important');sTC(cm,st);}}
+      }
+      function onS(){
+        if(window._zappyNavNoDarkHero) return;
+        if(window.innerWidth<=768){nb.classList.remove('scrolled');cTC(nb);if(cm){cm.classList.remove('scrolled');cTC(cm);}return;}
+        var y=window.scrollY||window.pageYOffset;
+        if(y>th){
+          nb.classList.add('scrolled');nb.style.setProperty('background-color',fb,'important');nb.style.setProperty('background-image','none','important');
+          nb.style.setProperty('--frosted-text',st);nb.style.backdropFilter='blur(12px)';nb.style.webkitBackdropFilter='blur(12px)';nb.style.boxShadow='0 2px 16px rgba(0,0,0,0.12)';
+          sTC(nb,st);
+          if(cm){cm.classList.add('scrolled');cm.style.setProperty('background',fb,'important');cm.style.setProperty('backdrop-filter','blur(12px)','important');cm.style.setProperty('-webkit-backdrop-filter','blur(12px)','important');sTC(cm,st);}
+        }else{
+          nb.classList.remove('scrolled');nb.style.setProperty('background-color','transparent','important');nb.style.removeProperty('background-image');
+          nb.style.removeProperty('--frosted-text');nb.style.backdropFilter='none';nb.style.webkitBackdropFilter='none';nb.style.boxShadow='none';
+          cTC(nb);
+          if(cm){cm.classList.remove('scrolled');cm.style.setProperty('background','transparent','important');cm.style.setProperty('backdrop-filter','none','important');cm.style.setProperty('-webkit-backdrop-filter','none','important');cTC(cm);}
+        }
+      }
+      function sLum(rv,gv,bv){rv/=255;gv/=255;bv/=255;rv=rv<=0.03928?rv/12.92:Math.pow((rv+0.055)/1.055,2.4);gv=gv<=0.03928?gv/12.92:Math.pow((gv+0.055)/1.055,2.4);bv=bv<=0.03928?bv/12.92:Math.pow((bv+0.055)/1.055,2.4);return 0.2126*rv+0.7152*gv+0.0722*bv;}
+      window.addEventListener('scroll',onS,{passive:true});
+      window.addEventListener('resize',onS,{passive:true});
+      onS();
+      var heroEl=document.querySelector('section[class*="hero"],[data-hero-type],main:not(.courses-page-main)>section:first-child');
+      var hasDH=false;
+      if(heroEl){var hCs=getComputedStyle(heroEl);var hBI=hCs.backgroundImage;if(hBI&&hBI!=='none'){if(hBI.indexOf('url(')!==-1){var hM2=hCs.backgroundColor.match(/\d+/g);if(hM2&&hM2.length>=3){hasDH=sLum(parseInt(hM2[0]),parseInt(hM2[1]),parseInt(hM2[2]))<0.4;}else{hasDH=true;}}else if(hBI.indexOf('gradient')!==-1){var cM=hBI.match(/rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)/g);if(cM&&cM.length>0){var tLm=0;for(var ci=0;ci<cM.length;ci++){var pts=cM[ci].match(/\d+/g);tLm+=sLum(parseInt(pts[0]),parseInt(pts[1]),parseInt(pts[2]));}hasDH=(tLm/cM.length)<0.4;}else{hasDH=true;}}else{hasDH=true;}}else{var hM=hCs.backgroundColor.match(/\d+/g);if(hM&&hM.length>=3){hasDH=sLum(parseInt(hM[0]),parseInt(hM[1]),parseInt(hM[2]))<0.4;}}}
+      if(!hasDH){window.removeEventListener('scroll',onS);window.removeEventListener('resize',onS);applyScrolled();window._zappyNavNoDarkHero=true;}
+    })();
+    </script>
+</body>
+</html>
