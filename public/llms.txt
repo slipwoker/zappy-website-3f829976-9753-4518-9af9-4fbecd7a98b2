@@ -7,65 +7,65 @@
 ## Pages
 
 ### Home
-https://thungy-brush-llc-3f829976.zappy5.app
+https://example.com
 Welcome to Thungy Brush llc, where innovation meets simplicity. Explore our flagship product and find out why customers love the Thungy Brush. Shop now!
 
 ### Buy
-https://thungy-brush-llc-3f829976.zappy5.app/buy
+https://example.com/buy
 Ready to experience the Thungy Brush for yourself? Our simple, secure buy page makes purchasing fast and effortless. One click is all it takes — order yours now!
 
 ### About
-https://thungy-brush-llc-3f829976.zappy5.app/about
+https://example.com/about
 Learn how Thungy Brush llc was founded with a mission to deliver quality and simplicity. Discover our values, our vision, and the passion that drives every product we make.
 
 ### Contact
-https://thungy-brush-llc-3f829976.zappy5.app/contact
+https://example.com/contact
 Have a question about your Thungy Brush order or just want to connect? Reach out to our friendly team today and get the fast, helpful support you deserve. Contact us now!
 
 ### Products
-https://thungy-brush-llc-3f829976.zappy5.app/products
+https://example.com/products
 Our Products - Thungy Brush llc
 
 ### Cart
-https://thungy-brush-llc-3f829976.zappy5.app/cart
+https://example.com/cart
 Your Cart
 
 ### Checkout
-https://thungy-brush-llc-3f829976.zappy5.app/checkout
+https://example.com/checkout
 Checkout
 
 ### Login
-https://thungy-brush-llc-3f829976.zappy5.app/login
+https://example.com/login
 Customer Login
 
 ### Account
-https://thungy-brush-llc-3f829976.zappy5.app/account
+https://example.com/account
 My Account
 
 ### Order Success
-https://thungy-brush-llc-3f829976.zappy5.app/order-success
+https://example.com/order-success
 Thank you for your order
 
 ### Product Detail
-https://thungy-brush-llc-3f829976.zappy5.app/product/:slug
+https://example.com/product/:slug
 Product Details - Thungy Brush llc
 
 ### Category
-https://thungy-brush-llc-3f829976.zappy5.app/category/:slug
+https://example.com/category/:slug
 Products - Thungy Brush llc
 
 ## Legal & Policy
 
 ### Privacy Policy
-https://thungy-brush-llc-3f829976.zappy5.app/privacy
+https://example.com/privacy
 Information about how user data is collected, stored, and protected.
 
 ### Terms & Conditions
-https://thungy-brush-llc-3f829976.zappy5.app/terms
+https://example.com/terms
 Legal terms describing service usage, rights, and policies.
 
 ### Accessibility Statement
-https://thungy-brush-llc-3f829976.zappy5.app/accessibility
+https://example.com/accessibility
 Information about WCAG compliance and accessibility features.
 
 ---
@@ -93,8 +93,8 @@ General
 
 # Machine-readable feeds
 
-- Sitemap (XML): https://thungy-brush-llc-3f829976.zappy5.app/sitemap.xml
-- Robots: https://thungy-brush-llc-3f829976.zappy5.app/robots.txt
-- Flattened page text (for LLMs): https://thungy-brush-llc-3f829976.zappy5.app/llms-full.txt
-- Products (JSON): https://thungy-brush-llc-3f829976.zappy5.app/products.json
-- Products (Google Merchant RSS): https://thungy-brush-llc-3f829976.zappy5.app/product-feed.xml
+- Sitemap (XML): https://example.com/sitemap.xml
+- Robots: https://example.com/robots.txt
+- Flattened page text (for LLMs): https://example.com/llms-full.txt
+- Products (JSON): https://example.com/products.json
+- Products (Google Merchant RSS): https://example.com/product-feed.xml
